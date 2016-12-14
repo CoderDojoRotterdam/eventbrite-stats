@@ -17,6 +17,9 @@ def main():
   print('total recurring ninjas ' + str( total_recurring_ninjas(orders)))
   print('percentage recurring ninjas ' + str( total_percentage_recurring_ninjas(orders)))
 
+  print('popular subjects:', popular_subjects(orders))
+  print('ninja cities', ninja_cities(orders))
+
 ### methods to actually calculate some numbers
 def total_visitors(orders=list()):
   return len(visitors(orders))
@@ -52,6 +55,25 @@ def total_percentage_recurring_ninjas(orders=list()):
 def unique_ninjas(orders=list()):
   identifiers = map(generate_identifier, visitors(orders))
   return Counter(identifiers).most_common(total_visitors(orders))
+
+def ninja_cities(orders=list()):
+  cities = map(lambda order: order.get('Woonplaats').lower(), visitors(orders))
+  return Counter(cities).most_common(total_visitors(orders))
+
+def popular_subjects(orders=list()):
+  # define the headers on which we can pull subjects from the record
+  # since we've changed the exact question a couple of times throughout the year
+  subject_headers = [
+    'Waar ga je mee aan de slag?',
+    'Waar wil je graag mee aan de slag gaan?'
+  ]
+
+  # pull the values from the records
+  popular = map(lambda order: order.get(subject_headers[0]) or order.get(subject_headers[1]), orders)
+
+  # filter the None values and empty strings and return the rest
+  return  filter(lambda subject: subject != None and subject != '', popular)
+
 
 
 ### helper methods
@@ -101,34 +123,3 @@ def get_orders():
     
 # kick things of
 main()
-
-# 0. Bestelnummer
-# 1. Besteldatum
-# 2. Voornaam
-# 3. Achternaam
-# 4. E-mail
-# 5. Aantal
-# 6. Tickettype
-# 7. Type bestelling
-# 8. Totaal betaald
-# 9. Eventbrite-servicekosten
-# 10. Eventbrite betalingskosten
-# 11. Bezoekersstatus
-# 12. Voornaam (ouder)
-# 13. Achternaam (ouder)
-# 14. Emailadres (Ouders)
-# 15. Mobiel nummer (Ouders)
-# 16. Ik heb een geldig telefoonnummer opgegeven zodat CoderDojo contact met mij op kan nemen in geval van nood. Wij behouden ons het recht voor om registraties zonder geldig telefoonnummer te annuleren.
-# 17. Ik accepteer dat ik opgeroepen kan worden voor de ouderdienst en mijn registratie ongedaan gemaakt wordt bij weigering van ouderdienst zonder opgaaf van een geldige reden.
-# 18. Zou je graag een workshop willen volgen? (Enkel bij genoeg aanmeldingen wordt de workshop gegeven)
-# 19. Waar wil je graag mee aan de slag gaan?
-# 20. Wat heb je tot nu toe al gedaan?
-# 21. Ik neem mijn eigen laptop mee
-# 22. Hoeveel ouders / verzorgers blijven er aanwezig?
-# 23. Leeftijd deelnemer
-# 24. Geslacht deelnemer
-# 25. Woonplaats
-# 26. Heb je een specifiek idee / suggestie waar wij je donatie aan kunnen spenderen?
-# 27. Ik ga akkoord met het huisregelement van CoderDojo Rotterdam zoals beschreven op http://coderdojo-rotterdam.nl/huisregels
-# 28. Met welke rede bezoek je CoderDojo Rotterdam?
-# 29. Met wie van CoderDojo Rotterdam heb je gesproken
