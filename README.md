@@ -1,6 +1,6 @@
 # Eventbrite Stats
 
-We thought it would be fun to see CoderDojo Rotterdam (SF) in terms of stats in 2016 as a sort of 'Year in Review' since all the cool companies are doing that these days :)
+We thought it would be nice to look at CoderDojo Rotterdam (SF) in numbers and stats for 2016 as a sort of 'Year in Review' since all the cool companies are doing that these days :)
 Sure we could have counted it manually.. Sure we could have downloaded all the CSV exports from EventBrite and fiddle around in Excel..
 
 But where's the fun in that? Better pick a language we didn't touch in years and start coding 🤔
