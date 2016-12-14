@@ -1,5 +1,6 @@
 import glob
 import csv
+from collections import Counter
 
 def main():
   orders = get_orders()
@@ -12,6 +13,9 @@ def main():
   print('total male ninjas: ' + str( total_male_ninjas(orders)))
   print('percentage female ninjas ' + str( total_percentage_female_ninjas(orders)))
   print('percentage male ninjas ' + str( total_percentage_male_ninjas(orders)))
+  print('total unique ninjas ' + str( total_unique_ninjas(orders)))
+  print('total recurring ninjas ' + str( total_recurring_ninjas(orders)))
+  print('percentage recurring ninjas ' + str( total_percentage_recurring_ninjas(orders)))
 
 ### methods to actually calculate some numbers
 def total_visitors(orders=list()):
@@ -35,6 +39,20 @@ def total_percentage_male_ninjas(orders=list()):
 def total_percentage_female_ninjas(orders=list()):
   return float(total_female_ninjas(orders)) / float(total_visitors(orders)) * 100.0
 
+def total_unique_ninjas(orders=list()):
+  return len(unique_ninjas(orders))
+
+def total_recurring_ninjas(orders=list()):
+  recurring = filter(lambda ninja: ninja[1] > 1, unique_ninjas(orders))
+  return len(recurring)
+
+def total_percentage_recurring_ninjas(orders=list()):
+  return float(total_recurring_ninjas(orders)) / float(total_visitors(orders)) * 100.0
+
+def unique_ninjas(orders=list()):
+  identifiers = map(generate_identifier, visitors(orders))
+  return Counter(identifiers).most_common(total_visitors(orders))
+
 
 ### helper methods
 def visitors(orders=list()):
@@ -44,6 +62,18 @@ def visitors(orders=list()):
 def donators(orders=list()):
   """Only return donator records"""
   return filter(lambda order: order.get('Tickettype') == 'Doneren', orders)
+
+def generate_identifier(order):
+  """Return a unique identifier by concatenating a lowercased stripped
+  version of firstname and lastname of the ninja"""
+
+  # get first and last names and convert to lowercase
+  first_name = order.get('Voornaam').lower()
+  last_name  = order.get('Achternaam').lower()
+
+  #return as concatenated string with spaces stripped out
+  return (first_name + last_name).translate(None, ' ')
+
 
 # this method returns a list of all orders read from various CSV files
 def get_orders():
